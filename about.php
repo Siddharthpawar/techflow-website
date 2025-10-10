@@ -169,6 +169,7 @@
                 <li><a href="products.php">Products/Services</a></li>
                 <li><a href="news.php">News</a></li>
                 <li><a href="contacts.php">Contacts</a></li>
+                <li><a href="graphic.php">Graphic</a></li>
             </ul>
         </div>
     </nav>
