@@ -1,3 +1,6 @@
+<?php
+require_once 'cookie_tracker.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -54,6 +57,22 @@
         nav ul li a:hover, nav ul li a.active {
             background: #34495e;
         }
+
+        /* Product History */
+        .product-history {
+            background: #34495e;
+            color: white;
+            padding: 1rem 0;
+            text-align: center;
+        }
+        .product-history a {
+            color: #3498db;
+            margin: 0 1rem;
+            text-decoration: none;
+        }
+        .product-history a:hover {
+            text-decoration: underline;
+        }
         
         /* Page Header */
         .page-header {
@@ -68,60 +87,65 @@
             margin-bottom: 1rem;
         }
         
-        /* Services Section */
-        .services-section {
+        /* Products Grid */
+        .products-section {
             padding: 4rem 0;
         }
         
-        .services-grid {
+        .products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
             margin-top: 3rem;
         }
         
-        .service-card {
+        .product-card {
             background: white;
             border-radius: 15px;
             padding: 2rem;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             transition: transform 0.3s, box-shadow 0.3s;
             border: 1px solid #e9ecef;
+            text-decoration: none;
+            color: inherit;
+            display: block;
         }
         
-        .service-card:hover {
+        .product-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 15px 40px rgba(0,0,0,0.15);
         }
         
-        .service-icon {
+        .product-icon {
             font-size: 3rem;
             margin-bottom: 1rem;
             text-align: center;
+            display: block;
         }
         
-        .service-card h3 {
+        .product-card h3 {
             color: #2c3e50;
             margin-bottom: 1rem;
             font-size: 1.5rem;
+            text-align: center;
         }
         
-        .service-card p {
+        .product-card p {
             margin-bottom: 1.5rem;
             color: #666;
         }
         
-        .service-features {
+        .product-features {
             list-style: none;
             margin-bottom: 1.5rem;
         }
         
-        .service-features li {
+        .product-features li {
             padding: 0.3rem 0;
             color: #555;
         }
         
-        .service-features li:before {
+        .product-features li:before {
             content: "✓ ";
             color: #27ae60;
             font-weight: bold;
@@ -132,83 +156,7 @@
             font-weight: bold;
             color: #e74c3c;
             text-align: center;
-        }
-        
-        /* Pricing Section */
-        .pricing-section {
-            background: #f8f9fa;
-            padding: 4rem 0;
-        }
-        
-        .pricing-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-        
-        .pricing-card {
-            background: white;
-            border-radius: 15px;
-            padding: 2rem;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            position: relative;
-        }
-        
-        .pricing-card.featured {
-            border: 3px solid #e74c3c;
-            transform: scale(1.05);
-        }
-        
-        .pricing-card.featured:before {
-            content: "Most Popular";
-            position: absolute;
-            top: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #e74c3c;
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
-        }
-        
-        .pricing-card h3 {
-            color: #2c3e50;
-            margin-bottom: 1rem;
-        }
-        
-        .pricing-card .price {
-            font-size: 2.5rem;
-            color: #e74c3c;
-            margin-bottom: 1rem;
-        }
-        
-        .pricing-features {
-            list-style: none;
-            margin: 2rem 0;
-        }
-        
-        .pricing-features li {
-            padding: 0.5rem 0;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .cta-button {
-            display: inline-block;
-            background: #e74c3c;
-            color: white;
-            padding: 1rem 2rem;
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: bold;
-            transition: background 0.3s;
             margin-top: 1rem;
-        }
-        
-        .cta-button:hover {
-            background: #c0392b;
         }
         
         /* Footer */
@@ -221,8 +169,13 @@
         
         /* Responsive */
         @media (max-width: 768px) {
-            .pricing-card.featured {
-                transform: none;
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .product-history a {
+                display: block;
+                margin: 0.5rem 0;
             }
         }
     </style>
@@ -237,10 +190,20 @@
                 <li><a href="products.php" class="active">Products/Services</a></li>
                 <li><a href="news.php">News</a></li>
                 <li><a href="contacts.php">Contacts</a></li>
+                <li><a href="login.php">Secure</a></li>
                 <li><a href="graphic.php">Graphic</a></li>
             </ul>
         </div>
     </nav>
+
+    <!-- Product History -->
+    <div class="product-history">
+        <div class="container">
+            <a href="products/recent.php">Recently Viewed Products</a>
+            |
+            <a href="products/popular.php">Most Popular Products</a>
+        </div>
+    </div>
 
     <!-- Page Header -->
     <section class="page-header">
@@ -250,144 +213,26 @@
         </div>
     </section>
 
-    <!-- Services Section -->
-    <section class="services-section">
+    <!-- Products Grid -->
+    <section class="products-section">
         <div class="container">
-            <h2 style="text-align: center; margin-bottom: 2rem; color: #2c3e50; font-size: 2.5rem;">What We Offer</h2>
-            <div class="services-grid">
-                <div class="service-card">
-                    <div class="service-icon">🌐</div>
-                    <h3>Web Development</h3>
-                    <p>Custom web applications built with modern frameworks and technologies.</p>
-                    <ul class="service-features">
-                        <li>Responsive Design</li>
-                        <li>E-commerce Solutions</li>
-                        <li>Content Management Systems</li>
-                        <li>API Development</li>
-                        <li>Progressive Web Apps</li>
+            <div class="products-grid">
+                <?php
+                $products = get_product_data();
+                foreach ($products as $id => $product):
+                ?>
+                <a href="product.php?id=<?php echo htmlspecialchars($id); ?>" class="product-card">
+                    <span class="product-icon"><?php echo $product['image']; ?></span>
+                    <h3><?php echo htmlspecialchars($product['title']); ?></h3>
+                    <p><?php echo htmlspecialchars($product['description']); ?></p>
+                    <ul class="product-features">
+                        <?php foreach ($product['features'] as $feature): ?>
+                            <li><?php echo htmlspecialchars($feature); ?></li>
+                        <?php endforeach; ?>
                     </ul>
-                    <div class="price">Starting at $2,500</div>
-                </div>
-
-                <div class="service-card">
-                    <div class="service-icon">📱</div>
-                    <h3>Mobile App Development</h3>
-                    <p>Native and cross-platform mobile applications for iOS and Android.</p>
-                    <ul class="service-features">
-                        <li>iOS & Android Apps</li>
-                        <li>React Native Development</li>
-                        <li>Flutter Applications</li>
-                        <li>App Store Optimization</li>
-                        <li>Push Notifications</li>
-                    </ul>
-                    <div class="price">Starting at $5,000</div>
-                </div>
-
-                <div class="service-card">
-                    <div class="service-icon">☁️</div>
-                    <h3>Cloud Solutions</h3>
-                    <p>Scalable cloud infrastructure and migration services.</p>
-                    <ul class="service-features">
-                        <li>AWS/Azure/GCP Setup</li>
-                        <li>Cloud Migration</li>
-                        <li>DevOps Implementation</li>
-                        <li>Container Orchestration</li>
-                        <li>Auto-scaling Solutions</li>
-                    </ul>
-                    <div class="price">Starting at $3,000</div>
-                </div>
-
-                <div class="service-card">
-                    <div class="service-icon">🔒</div>
-                    <h3>Cybersecurity</h3>
-                    <p>Comprehensive security solutions to protect your digital assets.</p>
-                    <ul class="service-features">
-                        <li>Security Audits</li>
-                        <li>Penetration Testing</li>
-                        <li>SSL Certificates</li>
-                        <li>Firewall Configuration</li>
-                        <li>Security Training</li>
-                    </ul>
-                    <div class="price">Starting at $1,500</div>
-                </div>
-
-                <div class="service-card">
-                    <div class="service-icon">🤖</div>
-                    <h3>AI & Machine Learning</h3>
-                    <p>Intelligent solutions powered by artificial intelligence.</p>
-                    <ul class="service-features">
-                        <li>Chatbot Development</li>
-                        <li>Predictive Analytics</li>
-                        <li>Image Recognition</li>
-                        <li>Natural Language Processing</li>
-                        <li>Recommendation Systems</li>
-                    </ul>
-                    <div class="price">Starting at $4,000</div>
-                </div>
-
-                <div class="service-card">
-                    <div class="service-icon">🛠️</div>
-                    <h3>Consulting & Support</h3>
-                    <p>Expert guidance and ongoing support for your technology needs.</p>
-                    <ul class="service-features">
-                        <li>Technology Consulting</li>
-                        <li>Code Reviews</li>
-                        <li>Performance Optimization</li>
-                        <li>24/7 Technical Support</li>
-                        <li>Training & Workshops</li>
-                    </ul>
-                    <div class="price">$150/hour</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Pricing Section -->
-    <section class="pricing-section">
-        <div class="container">
-            <h2 style="text-align: center; margin-bottom: 2rem; color: #2c3e50; font-size: 2.5rem;">Service Packages</h2>
-            <div class="pricing-grid">
-                <div class="pricing-card">
-                    <h3>Starter Package</h3>
-                    <div class="price">$2,500</div>
-                    <ul class="pricing-features">
-                        <li>Basic Website (5 pages)</li>
-                        <li>Responsive Design</li>
-                        <li>Contact Form</li>
-                        <li>SEO Optimization</li>
-                        <li>1 Month Support</li>
-                    </ul>
-                    <a href="contacts.php" class="cta-button">Get Started</a>
-                </div>
-
-                <div class="pricing-card featured">
-                    <h3>Professional Package</h3>
-                    <div class="price">$7,500</div>
-                    <ul class="pricing-features">
-                        <li>Custom Web Application</li>
-                        <li>Database Integration</li>
-                        <li>User Authentication</li>
-                        <li>Admin Dashboard</li>
-                        <li>3 Months Support</li>
-                        <li>Mobile Optimization</li>
-                    </ul>
-                    <a href="contacts.php" class="cta-button">Get Started</a>
-                </div>
-
-                <div class="pricing-card">
-                    <h3>Enterprise Package</h3>
-                    <div class="price">$15,000+</div>
-                    <ul class="pricing-features">
-                        <li>Complex Web Application</li>
-                        <li>API Development</li>
-                        <li>Cloud Deployment</li>
-                        <li>Security Implementation</li>
-                        <li>6 Months Support</li>
-                        <li>Performance Monitoring</li>
-                        <li>Custom Integrations</li>
-                    </ul>
-                    <a href="contacts.php" class="cta-button">Contact Us</a>
-                </div>
+                    <div class="price"><?php echo htmlspecialchars($product['price']); ?></div>
+                </a>
+                <?php endforeach; ?>
             </div>
         </div>
     </section>

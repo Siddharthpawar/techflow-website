@@ -197,6 +197,7 @@
                 <li><a href="products.php">Products/Services</a></li>
                 <li><a href="news.php">News</a></li>
                 <li><a href="contacts.php">Contacts</a></li>
+                <li><a href="login.php">Secure</a></li>
                 <li><a href="graphic.php" class="active">Graphic</a></li>
             </ul>
         </div>
