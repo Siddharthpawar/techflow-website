@@ -7,6 +7,24 @@ header('Access-Control-Allow-Headers: Content-Type');
 require_once '../config/db.php';
 require_once '../cookie_tracker.php';
 
+// Thumbnail mapping for different products
+function getProductThumbnail($productId) {
+    $thumbnailMap = [
+        'web-dev' => 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?q=80&w=1400&auto=format&fit=crop',
+        'mobile-dev' => 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?q=80&w=1400&auto=format&fit=crop',
+        'cloud-services' => 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1400&auto=format&fit=crop',
+        'ai-ml' => 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?q=80&w=1400&auto=format&fit=crop',
+        'cybersecurity' => 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?q=80&w=1400&auto=format&fit=crop',
+        'devops' => 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=1400&auto=format&fit=crop',
+        'data-analytics' => 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1400&auto=format&fit=crop',
+        'blockchain' => 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=1400&auto=format&fit=crop',
+        'iot-solutions' => 'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1400&auto=format&fit=crop',
+        'consulting' => 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1400&auto=format&fit=crop'
+    ];
+    
+    return $thumbnailMap[$productId] ?? 'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?q=80&w=1400&auto=format&fit=crop';
+}
+
 // Get top 5 products based on visit count and ratings
 if ($pdo === null) {
     // Fallback to cookie-based tracking if database is not available
@@ -26,7 +44,7 @@ if ($pdo === null) {
                 $price = (int) str_replace(',', '', $matches[0]);
             }
             
-            $thumbnail = 'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?q=80&w=1400&auto=format&fit=crop';
+            $thumbnail = getProductThumbnail($product_id);
             if (isset($product['image']) && filter_var($product['image'], FILTER_VALIDATE_URL)) {
                 $thumbnail = $product['image'];
             }
@@ -90,7 +108,7 @@ try {
                 $price = (int) str_replace(',', '', $matches[0]);
             }
             
-            $thumbnail = 'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?q=80&w=1400&auto=format&fit=crop';
+            $thumbnail = getProductThumbnail($product_id);
             if (isset($product['image']) && filter_var($product['image'], FILTER_VALIDATE_URL)) {
                 $thumbnail = $product['image'];
             }
@@ -138,10 +156,10 @@ try {
                     $price = (int) str_replace(',', '', $matches[0]);
                 }
                 
-                $thumbnail = 'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?q=80&w=1400&auto=format&fit=crop';
-                if (isset($product['image']) && filter_var($product['image'], FILTER_VALIDATE_URL)) {
-                    $thumbnail = $product['image'];
-                }
+            $thumbnail = getProductThumbnail($product_id);
+            if (isset($product['image']) && filter_var($product['image'], FILTER_VALIDATE_URL)) {
+                $thumbnail = $product['image'];
+            }
                 
                 $category = 'service';
                 if (stripos($product_id, 'web') !== false || stripos($product_id, 'mobile') !== false) {
