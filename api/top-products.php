@@ -62,7 +62,7 @@ if ($pdo === null) {
                 'id' => $product_id,
                 'name' => $product['title'],
                 'price' => $price,
-                'company' => 'NovaTrail',
+                'company' => 'Spartan Courses',
                 'category' => $category,
                 'thumbnail' => $thumbnail,
                 'description' => $product['description'],
@@ -72,7 +72,7 @@ if ($pdo === null) {
     }
     
     echo json_encode([
-        'company' => 'NovaTrail',
+        'company' => 'Spartan Courses',
         'items' => $items
     ], JSON_PRETTY_PRINT);
     exit();
@@ -130,7 +130,7 @@ try {
                 'id' => $product_id,
                 'name' => $product['title'],
                 'price' => $price,
-                'company' => 'NovaTrail',
+                'company' => 'Spartan Courses',
                 'category' => $category,
                 'thumbnail' => $thumbnail,
                 'description' => $product['description'],
@@ -174,7 +174,7 @@ try {
                     'id' => $product_id,
                     'name' => $product['title'],
                     'price' => $price,
-                    'company' => 'NovaTrail',
+                    'company' => 'Spartan Courses',
                     'category' => $category,
                     'thumbnail' => $thumbnail,
                     'description' => $product['description'],
@@ -185,7 +185,7 @@ try {
     }
     
     echo json_encode([
-        'company' => 'NovaTrail',
+        'company' => 'Spartan Courses',
         'items' => $items
     ], JSON_PRETTY_PRINT);
     

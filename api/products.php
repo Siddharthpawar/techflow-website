@@ -58,7 +58,7 @@ foreach ($products as $id => $product) {
         'id' => $id,
         'name' => $product['title'],
         'price' => $price,
-        'company' => 'NovaTrail',
+        'company' => 'Spartan Courses',
         'category' => $category,
         'thumbnail' => $thumbnail,
         'description' => $product['description']
@@ -67,7 +67,7 @@ foreach ($products as $id => $product) {
 
 // Return JSON response
 echo json_encode([
-    'company' => 'NovaTrail',
+    'company' => 'Spartan Courses',
     'items' => $items
 ], JSON_PRETTY_PRINT);
 ?>
