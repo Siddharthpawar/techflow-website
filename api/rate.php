@@ -17,35 +17,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode([
-        'status' => 'error',
+        'success' => false,
         'message' => 'Method not allowed. Use POST.'
     ]);
     exit();
 }
 
-// Get JSON input
-$input = json_decode(file_get_contents('php://input'), true);
+// Get form data (application/x-www-form-urlencoded)
+$product_id = isset($_POST['product_id']) ? trim($_POST['product_id']) : null;
+$rating = isset($_POST['rating']) ? (int)$_POST['rating'] : null;
+$comment = isset($_POST['comment']) ? trim($_POST['comment']) : null;
+$user = isset($_POST['user']) ? trim($_POST['user']) : null;
+$email = isset($_POST['email']) ? trim($_POST['email']) : null;
 
-// Validate input
-if (!isset($input['product_id']) || !isset($input['rating'])) {
+// Validate required fields
+if (empty($product_id) || $rating === null) {
     http_response_code(400);
     echo json_encode([
-        'status' => 'error',
+        'success' => false,
         'message' => 'Missing required fields: product_id and rating'
-    ]);
-    exit();
-}
-
-$product_id = trim($input['product_id']);
-$rating = (int) $input['rating'];
-
-// Validate product exists
-$products = get_product_data();
-if (!isset($products[$product_id])) {
-    http_response_code(404);
-    echo json_encode([
-        'status' => 'error',
-        'message' => 'Product not found'
     ]);
     exit();
 }
@@ -54,8 +44,19 @@ if (!isset($products[$product_id])) {
 if ($rating < 1 || $rating > 5) {
     http_response_code(400);
     echo json_encode([
-        'status' => 'error',
+        'success' => false,
         'message' => 'Rating must be between 1 and 5'
+    ]);
+    exit();
+}
+
+// Validate product exists
+$products = get_product_data();
+if (!isset($products[$product_id])) {
+    http_response_code(404);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Product not found'
     ]);
     exit();
 }
@@ -64,7 +65,7 @@ if ($rating < 1 || $rating > 5) {
 if ($pdo === null) {
     http_response_code(500);
     echo json_encode([
-        'status' => 'error',
+        'success' => false,
         'message' => 'Database connection failed'
     ]);
     exit();
@@ -75,18 +76,21 @@ try {
     $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? null;
     
     $stmt = $pdo->prepare("
-        INSERT INTO product_ratings (product_id, rating, user_ip, user_agent) 
-        VALUES (:product_id, :rating, :user_ip, :user_agent)
+        INSERT INTO product_ratings (product_id, rating, comment, user, email, user_ip, user_agent) 
+        VALUES (:product_id, :rating, :comment, :user, :email, :user_ip, :user_agent)
     ");
     
     $stmt->execute([
         ':product_id' => $product_id,
         ':rating' => $rating,
+        ':comment' => $comment ?: null,
+        ':user' => $user ?: null,
+        ':email' => $email ?: null,
         ':user_ip' => $user_ip,
         ':user_agent' => $user_agent
     ]);
     
-    // Get average rating for the product
+    // Get average rating and count for the product
     $avgStmt = $pdo->prepare("
         SELECT AVG(rating) as avg_rating, COUNT(*) as total_ratings 
         FROM product_ratings 
@@ -96,22 +100,18 @@ try {
     $avgResult = $avgStmt->fetch(PDO::FETCH_ASSOC);
     
     echo json_encode([
-        'status' => 'success',
-        'message' => 'Rating submitted successfully',
-        'data' => [
-            'product_id' => $product_id,
-            'rating' => $rating,
-            'average_rating' => round((float)$avgResult['avg_rating'], 2),
-            'total_ratings' => (int)$avgResult['total_ratings']
-        ]
+        'success' => true,
+        'message' => 'Rating stored',
+        'product_id' => $product_id,
+        'ratingAverage' => round((float)$avgResult['avg_rating'], 2),
+        'ratingCount' => (int)$avgResult['total_ratings']
     ]);
     
 } catch(PDOException $e) {
     http_response_code(500);
     echo json_encode([
-        'status' => 'error',
+        'success' => false,
         'message' => 'Failed to save rating: ' . $e->getMessage()
     ]);
 }
 ?>
-

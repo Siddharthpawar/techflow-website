@@ -38,84 +38,72 @@ curl http://localhost:8000/api/products.php
 ### 2. Rate a Product
 **Endpoint:** `POST /api/rate.php`
 
-**Description:** Submit a rating (1-5) for a product.
+**Content-Type:** `application/x-www-form-urlencoded`
 
-**Request Body:**
-```json
-{
-  "product_id": "web-dev",
-  "rating": 5
-}
+**Description:** Submit a rating (1-5) and optional comment for a product.
+
+**Request Fields:**
+- `product_id` (string, required): The ID of the product to rate
+- `rating` (1-5, required): Rating value between 1 and 5
+- `comment` (string, optional): Text comment about the product
+- `user` (string, optional): User name
+- `email` (string, optional): User email
+
+**Request Example:**
+```
+product_id=p101&rating=5&comment=Great!&user=Lucifer&email=lucifer@example.com
 ```
 
-**Response:**
+**Response Format:**
 ```json
 {
-  "status": "success",
-  "message": "Rating submitted successfully",
-  "data": {
-    "product_id": "web-dev",
-    "rating": 5,
-    "average_rating": 4.5,
-    "total_ratings": 10
-  }
+  "success": true,
+  "message": "Rating stored",
+  "product_id": "p101",
+  "ratingAverage": 4.8,
+  "ratingCount": 23
 }
 ```
 
 **Example:**
 ```bash
 curl -X POST http://localhost:8000/api/rate.php \
-  -H "Content-Type: application/json" \
-  -d '{"product_id": "web-dev", "rating": 5}'
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "product_id=p101&rating=5&comment=Great!&user=Lucifer&email=lucifer@example.com"
 ```
 
 ---
 
 ### 3. Track User Visit
-**Endpoint:** `POST /api/track.php` or `GET /api/track.php?product_id=web-dev&user_id=user123`
+**Endpoint:** `POST /api/track.php`
 
-**Description:** Track when a user visits a product page. **Requires user_id for tracking.**
+**Content-Type:** `application/x-www-form-urlencoded`
 
-**POST Request Body:**
-```json
-{
-  "product_id": "web-dev",
-  "user_id": "user123",
-  "page_url": "/product.php?id=web-dev"
-}
+**Description:** Track when a user visits a product page.
+
+**Request Fields:**
+- `product_id` (string, required): The ID of the product being viewed
+- `user` (string, required): The user identifier (can be username or email)
+
+**Request Example:**
+```
+product_id=c101&user=lucifer@example.com
 ```
 
-**GET Parameters:**
-- `product_id` (required): The ID of the product being viewed
-- `user_id` (required): The ID of the user visiting the product
-- `page_url` (optional): The URL of the page being visited
-
-**Note:** If `user_id` is not provided in the request, the API will check the session for `user_id` or `userid`. If still not found, it will return an error.
-
-**Response:**
+**Response Format:**
 ```json
 {
-  "status": "success",
-  "message": "Visit tracked successfully",
-  "data": {
-    "product_id": "web-dev",
-    "user_id": "user123",
-    "page_url": "/product.php?id=web-dev",
-    "total_visits": 42,
-    "user_visits": 3
-  }
+  "success": true,
+  "message": "Visit tracked",
+  "product_id": "c101"
 }
 ```
 
 **Example:**
 ```bash
-# POST request
 curl -X POST http://localhost:8000/api/track.php \
-  -H "Content-Type: application/json" \
-  -d '{"product_id": "web-dev", "user_id": "user123", "page_url": "/product.php?id=web-dev"}'
-
-# GET request
-curl "http://localhost:8000/api/track.php?product_id=web-dev&user_id=user123"
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "product_id=c101&user=lucifer@example.com"
 ```
 
 ---
