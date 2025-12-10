@@ -75,3 +75,4 @@ mysql -u root -p'Hannohinrich@12' techflow_db -e "SELECT COUNT(*) as total FROM 
 mysql -u root -p'Hannohinrich@12' techflow_db -e "SELECT COUNT(*) as total FROM visit_tracking;"
 ```
 
+

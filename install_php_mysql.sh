@@ -43,3 +43,4 @@ php -m | grep -i mysql
 echo ""
 echo "Done! Try running php setup_database.php again"
 
+

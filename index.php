@@ -185,7 +185,7 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="container">
-            <h1>TechFlow Solutions</h1>
+            <h1>Spartan Courses</h1>
             <p>Transforming Ideas into Digital Reality</p>
             <a href="products.php" class="cta-button">Explore Our Services</a>
         </div>

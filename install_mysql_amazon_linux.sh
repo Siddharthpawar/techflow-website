@@ -70,3 +70,4 @@ echo "Setup complete! Next:"
 echo "1. Set root password: sudo mysql -e \"ALTER USER 'root'@'localhost' IDENTIFIED BY 'Hannohinrich@12';\""
 echo "2. Run: php setup_database.php"
 
+

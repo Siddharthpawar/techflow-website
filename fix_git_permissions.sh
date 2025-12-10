@@ -16,3 +16,4 @@ chmod -R 700 .git
 
 echo "✓ Permissions fixed! You can now run 'git pull'"
 
+
