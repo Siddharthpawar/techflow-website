@@ -159,6 +159,18 @@ require_once 'cookie_tracker.php';
             margin-top: 1rem;
         }
         
+        .product-rating {
+            text-align: center;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .product-rating .stars {
+            color: #ffc107;
+            font-size: 1rem;
+        }
+        
         /* Footer */
         footer {
             background: #2c3e50;
@@ -231,6 +243,10 @@ require_once 'cookie_tracker.php';
                         <?php endforeach; ?>
                     </ul>
                     <div class="price"><?php echo htmlspecialchars($product['price']); ?></div>
+                    <div class="product-rating" data-product-id="<?php echo htmlspecialchars($id); ?>">
+                        <span class="stars">★★★★★</span>
+                        <span class="rating-text">(0)</span>
+                    </div>
                 </a>
                 <?php endforeach; ?>
             </div>
@@ -243,5 +259,32 @@ require_once 'cookie_tracker.php';
             <p>&copy; 2024 TechFlow Solutions. All rights reserved. | <a href="contacts.php" style="color: #3498db;">Contact Us</a></p>
         </div>
     </footer>
+
+    <script>
+        // Load ratings for all products
+        document.querySelectorAll('.product-rating').forEach(function(ratingEl) {
+            const productId = ratingEl.getAttribute('data-product-id');
+            fetch(`api/get-ratings.php?product_id=${encodeURIComponent(productId)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.total_ratings > 0) {
+                        const avgRating = data.average_rating;
+                        const totalRatings = data.total_ratings;
+                        const stars = Math.round(avgRating);
+                        const starsEl = ratingEl.querySelector('.stars');
+                        const textEl = ratingEl.querySelector('.rating-text');
+                        
+                        starsEl.innerHTML = '★'.repeat(stars) + '☆'.repeat(5 - stars);
+                        starsEl.style.color = '#ffc107';
+                        textEl.textContent = `(${avgRating.toFixed(1)} - ${totalRatings} ${totalRatings === 1 ? 'review' : 'reviews'})`;
+                    } else {
+                        ratingEl.style.display = 'none';
+                    }
+                })
+                .catch(error => {
+                    ratingEl.style.display = 'none';
+                });
+        });
+    </script>
 </body>
 </html>
